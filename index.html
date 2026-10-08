@@ -992,7 +992,8 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
         <h2 id="form-title">Save your free seat</h2>
         <p class="sub">Takes 20 seconds.</p>
 
-        <form id="reg-form" novalidate aria-labelledby="form-title">
+        <!-- Keep id="registrationForm": GoHighLevel names the tracked form by this id, and its workflows filter on it. -->
+        <form id="registrationForm" novalidate aria-labelledby="form-title">
           <div class="summary" id="form-summary" role="alert" hidden></div>
 
           <div class="field">
@@ -1635,7 +1636,7 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
     if (reg && 'IntersectionObserver' in window) {
       new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting && !seen) { seen = true; track('masterclass_form_view'); } }); }, { threshold: 0.4 }).observe(reg);
     }
-    var f = $('reg-form');
+    var f = $('registrationForm');
     if (f) { f.addEventListener('focusin', function () { if (!started) { started = true; track('masterclass_form_start'); } }); }
     Array.prototype.forEach.call(document.querySelectorAll('a[href="#register"]'), function (a) {
       a.addEventListener('click', function () { track('masterclass_cta_click', { label: a.textContent.trim().slice(0, 40) }); });
@@ -1753,7 +1754,7 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
   }
 
   /* ---------- Validation ---------- */
-  var form = $('reg-form'), summary = $('form-summary');
+  var form = $('registrationForm'), summary = $('form-summary');
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   var rules = [

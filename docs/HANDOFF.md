@@ -24,6 +24,12 @@ This commit is the go-live version of the masterclass page. One file, `index.htm
 - `thank-you.html` is new. It carries the same four steps as the live thank-you page (join link, WhatsApp, book a demo, email confirmation) plus add-to-calendar buttons, in the new design.
 - Safety switch: the real calls only run when the page is served from a host listed in `LIVE_HOSTS` (default `webinar.bighammerai.com`). Anywhere else the sign-up is simulated and the thank-you page shows a yellow "Preview mode" bar.
 
+## Fourth pass (integration parity with the live page)
+- The form id is `registrationForm` again, the same as the live page. GoHighLevel's tracker names each submission by the form's id, so a different id would arrive in GHL as a new form and the existing workflow (tags, WhatsApp) would not start. Do not rename it.
+- `workers/automations/` is copied from the old project: the Cloudflare Worker that turns WebinarGeek webhooks into GHL tags and custom fields, plus the beehiiv nurture routes. It is one deployed Worker and does not depend on which landing page is live. Secrets (`.dev.vars`) were not copied.
+- Checked with a local dry run (outbound calls recorded, not sent): one GHL form submission with `full_name`, `email`, `first_name`, `last_name`, `phone`, `phone_number`, `readable_webinar_date`, `readable_webinar_time`, `watch_link_webinargeek`; the n8n payload with UTM fields; the WebinarGeek registration; the thank-you page with join link and WhatsApp link.
+- Not the same as the live page: company and role are not collected, and the date shown on the page is fixed text (the live page read it from the broadcast backend).
+
 ## Go-live steps
 1. Upload `index.html` and `thank-you.html` to the root of webinar.bighammerai.com (replacing the current two files). Keep the file name `thank-you.html`; the form redirects to it.
 2. If the page will live on any other domain, add that hostname to `LIVE_HOSTS` near the top of the registration script in `index.html` (search for `LIVE_HOSTS`).
