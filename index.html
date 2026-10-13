@@ -1842,13 +1842,12 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
     }
 
     try {
+      /* Pinned to the 15 Oct broadcast while a dry-run webinar exists, so the
+         upcoming-broadcast API can't send registrants elsewhere. The values are
+         what that API returned for 6841508. To undo, revert this commit. */
       var broadcastData = null;
-      try {
-        var br = await fetch(BACKEND_URL + '/api/v1/broadcast/upcoming-broadcast?clientId=' + encodeURIComponent(CLIENT_ID));
-        if (br.ok) { broadcastData = await br.json(); }
-      } catch (err) { console.warn('Could not fetch broadcast data:', err); }
-      var bd = (broadcastData && broadcastData.broadcast_data) || {};
-      var broadcastId = (broadcastData && broadcastData.broadcast_id) || BROADCAST_ID;
+      var bd = { date: 1792080000, webinar_title: null, readable_date: '2026-10-15 16:00:00' };
+      var broadcastId = BROADCAST_ID;
 
       /* n8n: same payload as the live page, plus UTM fields */
       var lead = {
