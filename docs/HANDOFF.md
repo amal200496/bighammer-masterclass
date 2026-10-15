@@ -30,6 +30,11 @@ This commit is the go-live version of the masterclass page. One file, `index.htm
 - Checked with a local dry run (outbound calls recorded, not sent): one GHL form submission with `full_name`, `email`, `first_name`, `last_name`, `phone`, `phone_number`, `readable_webinar_date`, `readable_webinar_time`, `watch_link_webinargeek`; the n8n payload with UTM fields; the WebinarGeek registration; the thank-you page with join link and WhatsApp link.
 - Not the same as the live page: company and role are not collected, and the date shown on the page is fixed text (the live page read it from the broadcast backend).
 
+## Upcoming-broadcast lookup (replaces the 15 Oct pin)
+- On load the page asks `broadcast.growthclub.org` for the upcoming broadcast (`clientId=bighammer`) and moves every date to it: elements marked `data-sess`, the meta descriptions, the event JSON-LD, the countdown and the visitor's local time. It asks again on submit, so the WebinarGeek registration, the n8n payload and the GHL date fields all use that broadcast. `thank-you.html` takes its date, calendar links and .ics from the stored broadcast.
+- A broadcast is used only if it is not cancelled, not ended, and not more than 45 minutes past its start. If the backend gives nothing usable, sign-ups fall back to `FALLBACK_SESSION` (6942090, 22 Oct 10:00 UTC), the date the page text ships with, and the console logs a warning.
+- The backend returns the next broadcast across all BigHammer sessions, so the UK session can be the "upcoming" one for this page. The UK page keeps its own pinned broadcast for that reason.
+
 ## Go-live steps
 1. Upload `index.html` and `thank-you.html` to the root of webinar.bighammerai.com (replacing the current two files). Keep the file name `thank-you.html`; the form redirects to it.
 2. If the page will live on any other domain, add that hostname to `LIVE_HOSTS` near the top of the registration script in `index.html` (search for `LIVE_HOSTS`).
